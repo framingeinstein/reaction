@@ -146,6 +146,8 @@ Package.onTest(function (api) {
   api.use("underscore");
   api.use("ecmascript");
   api.use("random");
+  
+  // test drivers/reporters
   api.use("sanjo:jasmine@1.0.1");
   api.use("velocity:html-reporter@0.10.0");
   api.use("velocity:console-reporter@0.2.1");
