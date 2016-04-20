@@ -146,7 +146,7 @@ Package.onTest(function (api) {
   api.use("underscore");
   api.use("ecmascript");
   api.use("random");
-  
+
   // test drivers/reporters
   api.use("sanjo:jasmine@1.0.1");
   api.use("velocity:html-reporter@0.10.0");
@@ -162,11 +162,12 @@ Package.onTest(function (api) {
   api.use("reactioncommerce:core@0.13.0");
 
   // server integration tests
-  // api.addFiles("server/apptests/methods.app-test.js", "server");
-  // api.addFiles("server/apptests/shops.app-test.js", "server");
+  api.addFiles("server/apptests/methods.app-test.js", "server");
+  api.addFiles("server/apptests/shops.app-test.js", "server");
   api.addFiles("server/apptests/cartcore.app-test.js", "server");
-  // api.addFiles("server/apptests/cartcreate.app-test.js", "server");
-  // api.addFiles("server/apptests/cartcopy.app-test.js", "server");
-  // api.addFiles("server/apptests/cartremove.app-test.js", "server");
-  // api.addFiles("server/apptests/cartaddresses.app-test.js", "server");
+  api.addFiles("server/apptests/cartcreate.app-test.js", "server");
+  api.addFiles("server/apptests/cartmerge.app-test.js", "server");
+  api.addFiles("server/apptests/cartcopy.app-test.js", "server");
+  api.addFiles("server/apptests/cartremove.app-test.js", "server");
+  api.addFiles("server/apptests/cartaddresses.app-test.js", "server");
 });
