@@ -463,12 +463,42 @@ Meteor.methods({
 
     // if quantity lets convert to negative and increment
     let removeQuantity = Math.abs(quantity) * -1;
+    let checkForCartItem = ReactionCore.Collections.Cart.findOne({_id: cart._id, items: cartItem});
+    let thisItem = _.filter(checkForCartItem.items,function (elem) {
+      return elem._id = itemId;
+    })[0];
+
+    if ((thisItem.quantity + removeQuantity) <= 0) {
+      // decrementing this would set the quantity to 0 so removing
+      // todo: refactor this removal code to a common function
+      return ReactionCore.Collections.Cart.update({
+        _id: cart._id
+      }, {
+        $pull: {
+          items: {
+            _id: itemId
+          }
+        }
+      }, (error, result) => {
+        if (error) {
+          ReactionCore.Log.warn("error removing from cart", ReactionCore
+            .Collections.Cart.simpleSchema().namedContext().invalidKeys());
+          return error;
+        }
+        if (result) {
+          ReactionCore.Log.info(`cart: deleted cart item variant id ${
+            cartItem.variants._id} because projected quantity was <= 0`);
+          return result;
+        }
+      });
+    }
+
     return ReactionCore.Collections.Cart.update({
       _id: cart._id,
-      items: cartItem
+      items: { $elemMatch: { _id: itemId } }
     }, {
       $inc: {
-        "items.quantity": removeQuantity
+        "items.$.quantity": removeQuantity
       }
     }, (error, result) => {
       if (error) {
@@ -477,8 +507,8 @@ Meteor.methods({
         return error;
       }
       if (result) {
-        ReactionCore.Log.info(`cart: removed variant ${
-          cartItem._id} quantity of ${quantity}`);
+        ReactionCore.Log.info(`cart: decremented cartItem ${
+          cartItem._id} by a quantity of ${quantity}`);
         return result;
       }
     });
